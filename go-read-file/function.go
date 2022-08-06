@@ -18,10 +18,9 @@ func init() {
 func ListFiles(w http.ResponseWriter, r *http.Request) {
 	// 静的ファイルを読み取りたい
 	func() {
-		b, err := os.ReadFile("static/hoge.json")
-		// b, err := os.ReadFile(os.Getenv("SOURCE_DIR") + "static/hoge.json")
+		b, err := os.ReadFile(os.Getenv("SOURCE_DIR") + "static/hoge.json")
 		if err != nil {
-			panic(err)
+			log.Println(err)
 		}
 
 		log.Println("static json", string(b))
