@@ -1,0 +1,10 @@
+{
+  "name": "list-files",
+  "version": "0.0.1",
+  "scripts": {
+    "start": "npx functions-framework --target=listFiles --signature-type=http --port 9999"
+  },
+  "devDependencies": {
+    "@google-cloud/functions-framework": "^3.1.2"
+  }
+}
