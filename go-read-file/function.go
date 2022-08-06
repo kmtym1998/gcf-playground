@@ -1,40 +1,57 @@
 package f
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
-	"time"
 )
 
 func ListFiles(w http.ResponseWriter, r *http.Request) {
-	log.Println(time.Now())
+	func() {
+		currentDir, _ := os.Getwd()
+		log.Println("currentDir", currentDir)
+	}()
 
-	currentDir, _ := os.Getwd()
-	log.Println("currentDir", currentDir)
+	func() {
+		err := filepath.Walk("/workspace", func(path string, info os.FileInfo, err error) error {
+			if err != nil {
+				return err
+			}
 
-	err := filepath.Walk("/", func(path string, info os.FileInfo, err error) error {
+			fmt.Printf("path: %#v\n", path)
+			return nil
+		})
 		if err != nil {
-			return err
+			panic(err)
+		}
+	}()
+
+	func() {
+		b, err := os.ReadFile("/workspace/main.go")
+		if err != nil {
+			panic(err)
 		}
 
-		// 特定のディレクトリを無視したい場合は `filepath.SkipDir` を返す
-		// 例えば `AAA` という名前のディレクトリを無視する場合は以下のようにする
-		// if info.IsDir() && info.Name() == "AAA" {
-		// 	return filepath.SkipDir
-		// }
-
-		if info.IsDir() && info.Name() == "etc" {
-			return filepath.SkipDir
+		dirs, err := os.ReadDir("/")
+		if err != nil {
+			panic(err)
 		}
 
-		fmt.Printf("path: %#v\n", path)
-		return nil
-	})
+		for _, dir := range dirs {
+			log.Println("dir.Name()", dir.Name())
+		}
+		logEntry, err := json.Marshal(map[string]string{
+			"severity": "DEBUG",
+			"message":  string(b),
+		})
+		if err != nil {
+			panic(err)
+		}
 
-	if err != nil {
-		panic(err)
-	}
+		fmt.Print(string(logEntry))
+	}()
+
 }
