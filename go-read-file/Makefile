@@ -1,7 +1,7 @@
 FUNCTION_NAME:=go-read-file
 ENTRY_POINT:=ListFiles
 EXECUTION_TYPE:=http
-SOURCE_DIR:=./serverless_function_source_code
+SOURCE_DIR:=./serverless_function_source_code/
 PORT:=9999
 
 # .env を読み込む

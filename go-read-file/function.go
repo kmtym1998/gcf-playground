@@ -7,14 +7,33 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+
+	"github.com/GoogleCloudPlatform/functions-framework-go/functions"
 )
 
+func init() {
+	functions.HTTP("ListFiles", ListFiles)
+}
+
 func ListFiles(w http.ResponseWriter, r *http.Request) {
+	// 静的ファイルを読み取りたい
+	func() {
+		b, err := os.ReadFile("static/hoge.json")
+		// b, err := os.ReadFile(os.Getenv("SOURCE_DIR") + "static/hoge.json")
+		if err != nil {
+			panic(err)
+		}
+
+		log.Println("static json", string(b))
+	}()
+
+	// カレントディレクトリ
 	func() {
 		currentDir, _ := os.Getwd()
 		log.Println("currentDir", currentDir)
 	}()
 
+	// /workspace 配下のファイルを読む
 	func() {
 		err := filepath.Walk("/workspace", func(path string, info os.FileInfo, err error) error {
 			if err != nil {
@@ -29,6 +48,7 @@ func ListFiles(w http.ResponseWriter, r *http.Request) {
 		}
 	}()
 
+	// /workspace/main.go 配下のファイルを読む
 	func() {
 		b, err := os.ReadFile("/workspace/main.go")
 		if err != nil {
