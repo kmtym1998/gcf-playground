@@ -26,6 +26,10 @@ func ListFiles(w http.ResponseWriter, r *http.Request) {
 		// 	return filepath.SkipDir
 		// }
 
+		if info.IsDir() && info.Name() == "etc" {
+			return filepath.SkipDir
+		}
+
 		fmt.Printf("path: %#v\n", path)
 		return nil
 	})
