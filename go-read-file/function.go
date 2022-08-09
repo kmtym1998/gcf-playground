@@ -18,7 +18,13 @@ func init() {
 func ListFiles(w http.ResponseWriter, r *http.Request) {
 	// 静的ファイルを読み取りたい
 	func() {
-		b, err := os.ReadFile(os.Getenv("SOURCE_DIR") + "static/hoge.json")
+		b, err := os.ReadFile("static/hoge.json")
+		if err != nil {
+			log.Println(err)
+		}
+		log.Println("static json", string(b))
+
+		b, err = os.ReadFile(os.Getenv("SOURCE_DIR") + "static/hoge.json")
 		if err != nil {
 			log.Println(err)
 		}
@@ -34,7 +40,7 @@ func ListFiles(w http.ResponseWriter, r *http.Request) {
 
 	// /workspace 配下のファイルを読む
 	func() {
-		err := filepath.Walk("/workspace", func(path string, info os.FileInfo, err error) error {
+		err := filepath.Walk("/workspace", func(path string, _ os.FileInfo, err error) error {
 			if err != nil {
 				return err
 			}
@@ -53,6 +59,17 @@ func ListFiles(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			panic(err)
 		}
+		log.Println("== main.go ==========")
+		log.Println(string(b))
+		log.Println("============")
+
+		b, err = os.ReadFile("/workspace/go.mod")
+		if err != nil {
+			panic(err)
+		}
+		log.Println("== go.mod ==========")
+		log.Println(string(b))
+		log.Println("============")
 
 		dirs, err := os.ReadDir("/")
 		if err != nil {
@@ -72,5 +89,4 @@ func ListFiles(w http.ResponseWriter, r *http.Request) {
 
 		fmt.Print(string(logEntry))
 	}()
-
 }
