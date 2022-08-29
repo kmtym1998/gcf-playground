@@ -18,7 +18,7 @@ run:
 	FUNCTION_TARGET=${ENTRY_POINT} go run cmd/main.go
 
 deploy:
-	gcloud beta functions deploy ${FUNCTION_NAME} \
+	gcloud functions deploy ${FUNCTION_NAME} \
 		--project kmt-lab \
 		--entry-point ${ENTRY_POINT} \
 		--runtime go116 \

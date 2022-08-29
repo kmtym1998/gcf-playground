@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/GoogleCloudPlatform/functions-framework-go/functions"
+	"github.com/kmtym1998/gcf-playground/postgres"
 )
 
 func init() {
@@ -18,6 +19,19 @@ func init() {
 }
 
 func ListFiles(w http.ResponseWriter, r *http.Request) {
+	func() {
+		uri := "user=kmtym1998 password=kmtym1998 database=app host=10.0.0.2 port=5432"
+		pg := postgres.NewPGService(uri)
+
+		if err := pg.Open(); err != nil {
+			panic(err)
+		}
+
+		if err := pg.DB.Ping(); err != nil {
+			panic(err)
+		}
+	}()
+
 	// IP 見る
 	func() {
 		url := "https://rakko.tools/tools/2/"
