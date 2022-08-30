@@ -1,5 +1,5 @@
 FUNCTION_NAME:=go-read-file
-ENTRY_POINT:=ListFiles
+ENTRY_POINT:=Ping
 EXECUTION_TYPE:=http
 SOURCE_DIR:=./serverless_function_source_code/
 PORT:=9999
