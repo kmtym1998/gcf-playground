@@ -14,6 +14,14 @@ func init() {
 	functions.HTTP("Ping", Ping)
 }
 
+type user struct {
+	id        int
+	name      string
+	email     string
+	createdAt string
+	updatedAt string
+}
+
 func Ping(w http.ResponseWriter, r *http.Request) {
 	func() {
 		uri := "user=kmtym1998 password=kmtym1998 database=app host=10.0.0.2 port=5432"
@@ -26,6 +34,24 @@ func Ping(w http.ResponseWriter, r *http.Request) {
 		if err := pg.DB.Ping(); err != nil {
 			panic(err)
 		}
+
+		rows, err := pg.DB.Query("SELECT * FROM users;")
+		if err != nil {
+			panic(err)
+		}
+		defer rows.Close()
+
+		ul := []user{}
+		u := user{}
+		for rows.Next() {
+			if err := rows.Scan(&u.id, &u.name, &u.email, &u.createdAt, &u.updatedAt); err != nil {
+				panic(err)
+			}
+
+			ul = append(ul, u)
+		}
+
+		log.Printf("%+v", ul)
 	}()
 
 	// IP 見る
