@@ -23,6 +23,25 @@ type user struct {
 }
 
 func Ping(w http.ResponseWriter, r *http.Request) {
+	// IP 見る
+	func() {
+		url := "https://rakko.tools/tools/2/"
+		byteResp, httpResp, err := Request(http.MethodGet, url, nil, nil)
+		if err != nil {
+			log.Fatalln("err httpwrap.Request", err)
+		}
+
+		htmlResp := string(byteResp)
+		startTag := `<textarea id="resultTextArea">`
+		endTag := `</textarea>`
+		startTagPosition := strings.Index(htmlResp, startTag)
+		endTagPosition := strings.LastIndex(htmlResp, endTag) // </textarea> が 2つあるのでその後の方
+
+		println(htmlResp[startTagPosition+len(startTag) : endTagPosition])
+
+		println("httpResp.Status", httpResp.Status)
+	}()
+
 	func() {
 		uri := "user=kmtym1998 password=kmtym1998 database=app host=10.0.0.2 port=5432"
 		pg := postgres.NewPGService(uri)
@@ -52,25 +71,6 @@ func Ping(w http.ResponseWriter, r *http.Request) {
 		}
 
 		log.Printf("%+v", ul)
-	}()
-
-	// IP 見る
-	func() {
-		url := "https://rakko.tools/tools/2/"
-		byteResp, httpResp, err := Request(http.MethodGet, url, nil, nil)
-		if err != nil {
-			log.Fatalln("err httpwrap.Request", err)
-		}
-
-		htmlResp := string(byteResp)
-		startTag := `<textarea id="resultTextArea">`
-		endTag := `</textarea>`
-		startTagPosition := strings.Index(htmlResp, startTag)
-		endTagPosition := strings.LastIndex(htmlResp, endTag) // </textarea> が 2つあるのでその後の方
-
-		println(htmlResp[startTagPosition+len(startTag) : endTagPosition])
-
-		println("httpResp.Status", httpResp.Status)
 	}()
 }
 
