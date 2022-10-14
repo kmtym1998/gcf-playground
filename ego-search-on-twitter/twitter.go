@@ -25,7 +25,7 @@ const TWITTER_API_ENDPOINT = "https://api.twitter.com/2/tweets/search/recent"
 func searchRecentTweets(bearerToken string, startTime, query string) (*tweets, error) {
 	resp, err := doRequest(
 		http.MethodGet,
-		TWITTER_API_ENDPOINT+"?query="+query,
+		TWITTER_API_ENDPOINT+"?query="+query+"&start_time="+startTime,
 		nil,
 		[]reqHeaders{
 			{"Authorization", "Bearer " + bearerToken},

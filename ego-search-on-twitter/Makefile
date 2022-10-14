@@ -14,16 +14,18 @@ run:
 	FUNCTION_TARGET=${ENTRY_POINT} go run cmd/main.go
 
 deploy:
-	gcloud functions deploy ego-search-twitter \
+	gcloud functions deploy ego-search-on-twitter \
 		--project kmt-lab \
 		--runtime go119 \
+		--memory 128MB \
 		--entry-point ${ENTRY_POINT} \
-		--trigger-resource ego-search-twitter-topic \
+		--trigger-resource ego-search-on-twitter-topic \
 		--trigger-event google.pubsub.topic.publish \
 		--region=asia-northeast1 \
 		--service-account function-ego-search@kmt-lab.iam.gserviceaccount.com \
-		--set-secrets HASURA_GRAPHQL_ADMIN_SECRET=hasura-admin-secret:latest,SLACK_WEBHOOK_URL=slack-webhook-url-alert:latest \
 		--set-env-vars TZ=Asia/Tokyo \
+		--set-secrets BEARER_TOKEN=TWITTER_BEARER_TOKEN:latest,SLACK_WEBHOOK_URL=SLACK_WEBHOOK_URL_EGO_SEARCH:latest \
+		--min-instances 0 \
 		--max-instances 1
 
 build-run:
