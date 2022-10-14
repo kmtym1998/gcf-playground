@@ -1,6 +1,7 @@
 package f
 
 import (
+	"bytes"
 	"io"
 	"log"
 	"net/http"
@@ -12,16 +13,28 @@ type reqHeaders struct {
 }
 
 func doRequest(method string, url string, body *[]byte, headers []reqHeaders) ([]byte, error) {
-	req, err := http.NewRequest(method, url, nil)
-	if err != nil {
-		return nil, err
+	var (
+		req *http.Request
+		err error
+	)
+	if body != nil {
+		r := bytes.NewReader(*body)
+		req, err = http.NewRequest(method, url, r)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		req, err = http.NewRequest(method, url, nil)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	for _, rh := range headers {
 		req.Header.Set(rh.Key, rh.Value)
 	}
 
-	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("content-type", "application/json")
 
 	client := new(http.Client)
 

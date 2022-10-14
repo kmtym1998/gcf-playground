@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"strings"
 	"time"
 )
 
@@ -26,7 +25,7 @@ func Run(ctx context.Context, _ PubSubMessage) error {
 	webhookURL := os.Getenv("SLACK_WEBHOOK_URL")
 	for _, t := range tweets.Data {
 		if err := sendSlack(
-			fmt.Sprintf("%s ~ %s の検索結果: %s", startTime, time.Now().Format(time.RFC3339), strings.ReplaceAll(t.Text, "\n", "")),
+			fmt.Sprintf("%s ~ %s の検索結果:\n%s", startTime, time.Now().Format(time.RFC3339), t.Text),
 			webhookURL,
 		); err != nil {
 			return err

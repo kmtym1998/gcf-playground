@@ -7,26 +7,26 @@ import (
 )
 
 func sendSlack(text, webhookURL string) error {
-	body := map[string]string{"text": text}
+	reqBody := map[string]string{"text": text}
 
-	b, err := json.Marshal(body)
+	reqBodyB, err := json.Marshal(reqBody)
 	if err != nil {
 		return err
 	}
 
-	log.Println(string(b))
+	log.Printf(`{"severity": "INFO", "message": %s}`, string(reqBodyB))
 
-	resp, err := doRequest(
+	respBodyB, err := doRequest(
 		http.MethodPost,
 		webhookURL,
-		&b,
+		&reqBodyB,
 		nil,
 	)
 	if err != nil {
 		return err
 	}
 
-	log.Printf(`{"severity": "INFO", "textPayload": %s}`, string(resp))
+	log.Printf(`{"severity": "INFO", "message": %s}`, string(respBodyB))
 
 	return nil
 }
