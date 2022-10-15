@@ -1,0 +1,33 @@
+name: Deploy Cloud Function ego-search-on-twitter
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/deploy-ego-search-on-twitter.yaml'
+      - 'ego-search-on-twitter/**'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: 'Authenticate to google cloud'
+        uses: 'google-github-actions/auth@v0'
+        with:
+          # `jobs.job.timeout-minutes` を超過する値は設定しても無意味
+          access_token_lifetime: 600s
+          project_id: kmt-lab
+          workload_identity_provider: /projects/207201645668/locations/global/workloadIdentityPools/github-actions-gcf-playground/providers/github-actions-gcf-playground
+          service_account: god-sa@kmt-lab.iam.gserviceaccount.com
+
+      - name: Deploy Function
+        working-directory: ./ego-search-on-twitter
+        run: make deploy
