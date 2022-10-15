@@ -25,7 +25,7 @@ jobs:
           # `jobs.job.timeout-minutes` を超過する値は設定しても無意味
           access_token_lifetime: 600s
           project_id: kmt-lab
-          workload_identity_provider: /projects/207201645668/locations/global/workloadIdentityPools/github-actions-gcf-playground/providers/github-actions-gcf-playground
+          workload_identity_provider: projects/207201645668/locations/global/workloadIdentityPools/gh-gcf-playground/providers/gh-gcf-playground
           service_account: god-sa@kmt-lab.iam.gserviceaccount.com
 
       - name: Deploy Function
