@@ -1,25 +1,26 @@
 package f
 
 import (
-	"context"
 	"fmt"
+	"net/http"
 	"os"
 	"time"
+
+	"github.com/GoogleCloudPlatform/functions-framework-go/functions"
 )
 
 func init() {
+	functions.HTTP("Run", Run)
 }
 
-type PubSubMessage struct{}
-
-func Run(ctx context.Context, _ PubSubMessage) error {
+func Run(w http.ResponseWriter, r *http.Request) {
 	startTime := time.Now().Add(-time.Hour * 12).Format(time.RFC3339)
 	query := "zenn.dev/kmtym1998"
 	bearerToken := os.Getenv("BEARER_TOKEN")
 
 	tweets, err := searchRecentTweets(bearerToken, startTime, query)
 	if err != nil {
-		return err
+		w.WriteHeader(http.StatusInternalServerError)
 	}
 
 	webhookURL := os.Getenv("SLACK_WEBHOOK_URL")
@@ -28,9 +29,9 @@ func Run(ctx context.Context, _ PubSubMessage) error {
 			fmt.Sprintf("%s ~ %s の検索結果:\n%s", startTime, time.Now().Format(time.RFC3339), t.Text),
 			webhookURL,
 		); err != nil {
-			return err
+			w.WriteHeader(http.StatusInternalServerError)
 		}
 	}
 
-	return nil
+	w.WriteHeader(http.StatusOK)
 }
