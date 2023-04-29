@@ -14,7 +14,7 @@ func init() {
 }
 
 func Run(w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now().Add(-time.Hour * 24 * 6).UTC().Format(time.RFC3339)
+	startTime := time.Now().Add(-time.Hour * 12).UTC().Format(time.RFC3339)
 	const query = "kmtym1998"
 	bearerToken := os.Getenv("BEARER_TOKEN")
 
