@@ -2,6 +2,7 @@ package f
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -53,6 +54,16 @@ func doRequest(method string, url string, body *[]byte, headers []reqHeaders) ([
 	if err != nil {
 		return nil, err
 	}
+
+	if resp.StatusCode >= http.StatusBadRequest {
+		return nil, fmt.Errorf("status code is %d. responseBody: %s", resp.StatusCode, string(b))
+	}
+
+	if resp.StatusCode >= http.StatusInternalServerError {
+		return nil, fmt.Errorf("status code is %d. responseBody: %s", resp.StatusCode, string(b))
+	}
+
+	log.Printf("status: %d, responseBody: %s\n", resp.StatusCode, string(b))
 
 	return b, err
 }

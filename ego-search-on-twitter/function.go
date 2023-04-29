@@ -14,13 +14,15 @@ func init() {
 }
 
 func Run(w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now().Add(-time.Hour * 12).Format(time.RFC3339)
-	query := "zenn.dev/kmtym1998"
+	startTime := time.Now().Add(-time.Hour * 24 * 6).UTC().Format(time.RFC3339)
+	const query = "kmtym1998"
 	bearerToken := os.Getenv("BEARER_TOKEN")
 
 	tweets, err := searchRecentTweets(bearerToken, startTime, query)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+		return
 	}
 
 	webhookURL := os.Getenv("SLACK_WEBHOOK_URL")
