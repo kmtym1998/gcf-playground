@@ -15,14 +15,12 @@ run:
 
 deploy:
 	gcloud functions deploy ego-search-on-twitter \
-		--project kmt-lab \
+		--project kmtym1998 \
 		--runtime go119 \
-		--memory 128MB \
+		--trigger-http \
 		--entry-point ${ENTRY_POINT} \
-		--trigger-resource ego-search-on-twitter-topic \
-		--trigger-event google.pubsub.topic.publish \
 		--region=asia-northeast1 \
-		--service-account function-ego-search@kmt-lab.iam.gserviceaccount.com \
+		--service-account gcf-ego-search@kmtym1998.iam.gserviceaccount.com \
 		--set-env-vars TZ=Asia/Tokyo \
 		--set-secrets BEARER_TOKEN=TWITTER_BEARER_TOKEN:latest,SLACK_WEBHOOK_URL=SLACK_WEBHOOK_URL_EGO_SEARCH:latest \
 		--min-instances 0 \
